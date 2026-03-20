@@ -1,0 +1,65 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: taskflow
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/taskflow}
+    username: ${SPRING_DATASOURCE_USERNAME:taskflow}
+    password: ${SPRING_DATASOURCE_PASSWORD:taskflow_secret}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://taskflow:taskflow_secret@localhost:27017/taskflow_nosql?authSource=admin}
+
+  activemq:
+    broker-url: ${SPRING_ACTIVEMQ_BROKER_URL:tcp://localhost:61616}
+    user: ${SPRING_ACTIVEMQ_USER:admin}
+    password: ${SPRING_ACTIVEMQ_PASSWORD:admin_secret}
+    pool:
+      enabled: true
+      max-connections: 5
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+jwt:
+  secret: ${JWT_SECRET:change_this_in_production_must_be_at_least_256_bits_long_secret_key}
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.taskflow: DEBUG
+    org.springframework.security: WARN
+    org.springframework.jms: WARN
