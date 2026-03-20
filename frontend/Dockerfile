@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Cache dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # Build application
 ARG VITE_API_BASE_URL=""
